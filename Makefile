@@ -84,9 +84,10 @@ tests: ## Run torch spyre tests, fanning out into tests-single-card + tests-mult
 # writes report.xml into RESULTS_DIR. Keeping it a mode of `tests` lets CI call
 # it through the same `make tests TEST_TYPE=...` entry point as every other
 # suite, so no new Makefile target or Jenkins wiring is needed.
+# --mode fms is required: spyre-perf-suite defaults to hf_adapters, so without it this cell silently benchmarks Granite instead of ops.
 ifeq ($(TEST_TYPE),perf)
 	@mkdir -p "$(RESULTS_DIR)"
-	spyre-perf-suite --no-experimental --stacks torch-spyre \
+	spyre-perf-suite --mode fms --no-experimental --stacks torch-spyre \
 		--report "$(RESULTS_DIR)/report.txt"
 	@test -f "$(RESULTS_DIR)/report.xml" || \
 		{ echo "ERROR: spyre-perf-suite did not emit $(RESULTS_DIR)/report.xml" >&2; \
